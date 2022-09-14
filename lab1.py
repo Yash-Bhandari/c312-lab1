@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-from ev3dev2.motor import LargeMotor
-from ev3dev2.motor import MoveSteering, OUTPUT_A, OUTPUT_D
+from ev3dev2.motor import LargeMotor, MoveSteering, OUTPUT_A, OUTPUT_D
 from time import sleep
 import sys
 
@@ -32,29 +31,28 @@ rated maximum speed of 1050 deg/s.
 '''
 
 def lemniscate():
-    debug_print('step 1')
-    for step in range(10):
-        steer_pair.on(steering=step * 2, speed=30)
-        sleep(0.5)
-
-    debug_print('step 2')
-    sleep(15)
-    debug_print('step 3')
-    for step in range(10):
-        steer_pair.on(steering=20 - step * 2, speed=30)
-        sleep(0.5)
-    debug_print('step 4')
-    sleep(5)
-
-    for step in range(10):
-        steer_pair.on(steering=-step * 2, speed=30)
-        sleep(0.5)
-
+    debug_print('half circle')
+    steer_pair.on_for_seconds(steering=25, speed=30, seconds=5)
+    debug_print('straight')
+    steer_pair.on_for_seconds(steering=0, speed=30, seconds=4)
+    debug_print('straightening')
+    steer_pair.on_for_seconds(steering=-90, speed=10, seconds=1)
+    debug_print('half circle')
+    steer_pair.on_for_seconds(steering=-25, speed=30, seconds=5)
+    debug_print('returning to start')
+    steer_pair.on_for_seconds(steering=0, speed=30, seconds=4)
+    # steer_pair.on_for_seconds(steering=50, speed=30, seconds=1)
+    # max_steer = 20
+    # num_steps = 10
+    # for step in range(num_steps):
+    #     steer_pair.on(steering=step * max_steer / num_steps, speed=30)
+    #     sleep(0.5)
 def rectangle():
     for step in range(4):
         debug_print('step {}'.format(step))
         steer_pair.on_for_seconds(steering=0, speed=30, seconds=5)
-        steer_pair.on_for_seconds(steering=90, speed=30, seconds=1.55)
+        steer_pair.on_for_seconds(steering=90, speed=20, seconds=1)
+
 lemniscate()
 # rectangle()
 # steer_pair.on_for_seconds(steering=100, speed=50, seconds=10, block=True)
