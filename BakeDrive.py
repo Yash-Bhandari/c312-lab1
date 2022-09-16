@@ -4,25 +4,25 @@ from ev3dev2.motor import LargeMotor, MoveSteering, OUTPUT_A, OUTPUT_D, MoveTank
 #tank_drive = MoveTank(OUTPUT_A, OUTPUT_D)
 
 # -- Constants --
-d = 10 # distance between wheels
-VelDrive = 20 # Constant speed
+d = 5.25 # distance between wheels // 2
+VelDrive = 30 # Constant speed
 maxSpeed = 50 # maximum speed
-TotSteps = 200 # Number of time steps
+TotSteps = 50 # Number of time steps
 Time = 4*np.pi
 
 # == Eq's ==
-t = np.linspace(0, Time, 200) # time
+t = np.linspace(0, Time, TotSteps) # time
 # ===========================================
 # -- Lemniscate -
-"""a = 5
+a = 100
 x = a*np.cos(1/2*t) * 1/(1+np.sin(1/2*t)**2)
-y = a*np.sin(1/2*t)*np.cos(1/2*t) * 1/(1+np.sin(1/2*t)**2)"""
+y = a*np.sin(1/2*t)*np.cos(1/2*t) * 1/(1+np.sin(1/2*t)**2)
 # -- line --
 """x = t
 y = 0*t"""
 # -- Circle --
-x = 5*np.cos(t)
-y = 5*np.sin(t)
+"""x = 5*np.cos(t)
+y = 5*np.sin(t)"""
 # -- Lissajous curve --
 """x = 4*np.cos(3*t)
 y = 4*np.sin(2*t)"""
@@ -48,9 +48,7 @@ def WheelSpeed(t,x,y):
     v_l = VelDrive + VelDrive*d/R
     v_r = VelDrive - VelDrive*d/R
 
-    v_l, v_r = wheelSpeedLimit(v_l, v_r)
-
-    print(max(v_l), max(v_r), min(v_l), min(v_r))
+    """v_l, v_r = wheelSpeedLimit(v_l, v_r)"""
 
     return v_l, v_r
 
@@ -58,14 +56,18 @@ def WheelSpeed(t,x,y):
 def wheelSpeedLimit(v_l, v_r):
     for i in range(len(v_l)):
         if abs(v_l[i]) > maxSpeed:
+            s = np.sign(v_r[i])
             factor = v_l[i]/maxSpeed
+
             v_l[i] /= factor
-            v_r[i] /= factor
+            v_r[i] /= s*factor
 
     for i in range(len(v_r)):
         if abs(v_r[i]) > maxSpeed:
+            s = np.sign(v_l[i])
             factor = v_r[i]/maxSpeed
-            v_l[i] /= factor
+
+            v_l[i] /= s*factor
             v_r /= factor
 
     return v_l, v_r
@@ -81,11 +83,6 @@ def drive():
             f.write(str(v_l[i]) + ' ' + str(v_r[i]) + ' ' + str(StepTime))
             f.write('\n')
     f.close()
-
-
-    lines = ['Readme', 'How to write text files in Python']
-    with open('readme.txt', 'w') as f:
-        f.write('\n'.join(lines))
 
     print(str(v_l))
     print(str(v_r))

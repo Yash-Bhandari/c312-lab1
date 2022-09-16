@@ -12,6 +12,8 @@ def main():
         count += 1
         v_l, v_r, TimeStep = line.split(' ')
         tank_drive.on_for_seconds(v_l, v_r, TimeStep[:-1])
+        tank_drive.wait_while('running')
+
 
 
 if __name__ == "__main__":
