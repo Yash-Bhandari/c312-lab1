@@ -3,9 +3,9 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
 
-# -- Graph of curve plt -- 
+# -- Graph of curve plt --
 fig1, ax1 = plt.subplots()
-ln, = plt.plot([], [], lw=2) 
+ln, = plt.plot([], [], lw=2)
 ln2, = plt.plot([], [], lw=2)
 ln3, = plt.plot([], [], 'o')
 
@@ -13,25 +13,25 @@ ln3, = plt.plot([], [], 'o')
 fig2, ax2 = plt.subplots()
 barcollection = plt.bar(['v_l', 'v_r', 'R'],[0, 0, 0])
 
-# -- Constants -- 
-d = 5 # distance between wheels over 2 
-VelDrive = 30 # constant speed 
+# -- Constants --
+d = 5 # distance between wheels over 2
+VelDrive = 30 # constant speed
 maxSpeed = 50
-Rmax = 550 # max radius of curvatature before it is a line  
+Rmax = 550 # max radius of curvatature before it is a line
 
-# == Eq's == 
+# == Eq's ==
 t = np.linspace(0, 4*np.pi, 200)
 # ===========================================
-# -- Lemniscate - 
-a = 100
+# -- Lemniscate -
+a = 50
 x = a*np.cos(1/2*t) * 1/(1+np.sin(1/2*t)**2)
 y = a*np.sin(1/2*t)*np.cos(1/2*t) * 1/(1+np.sin(1/2*t)**2)
 
-# -- line -- 
+# -- line --
 """x = t
 y = 0*t"""
 
-# -- Circle -- 
+# -- Circle --
 """x = 5*np.cos(t)
 y = 5*np.sin(t)"""
 
@@ -39,24 +39,24 @@ y = 5*np.sin(t)"""
 """x = 4*np.cos(1.5*t)
 y = 4*np.sin(t)"""
 
-# -- Test 1 -- 
+# -- Test 1 --
 """x = 2*np.cos(t)+1
 y = 5*np.sin(2*t)"""
 
-# -- cardioid -- 
+# -- cardioid --
 """x = 2*np.cos(t)*(1-np.cos(t))
 y = 2*np.sin(t)*(1-np.cos(t))"""
 
 
 # ===========================================
-# == derivatives == 
+# == derivatives ==
 dir_x_1 = np.gradient(x,t)
 dir_x_2 = np.gradient(dir_x_1,t)
 dir_y_1 = np.gradient(y,t)
 dir_y_2 = np.gradient(dir_y_1,t)
 # ===========================================
 
-# -- radius of curvature at reach time step -- 
+# -- radius of curvature at reach time step --
 R = ((dir_x_1**2 + dir_y_1**2)**(3/2)/
         (dir_x_1*dir_y_2 - dir_x_2*dir_y_1))
 
@@ -132,7 +132,7 @@ def wheelSpeed(v_l, v_r):
 ani1 = FuncAnimation(fig1, update, frames=200,
                     init_func=init, blit=True)
 
-anim2 = FuncAnimation(fig2, update2, frames=200, 
+anim2 = FuncAnimation(fig2, update2, frames=200,
                       init_func=init2, repeat=True)
 
 plt.show()
