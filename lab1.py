@@ -33,13 +33,13 @@ rated maximum speed of 1050 deg/s.
 
 def lemniscate():
     debug_print('half circle')
-    steer_pair.on_for_seconds(steering=25, speed=30, seconds=5)
+    steer_pair.on_for_seconds(steering=25, speed=30, seconds=4)
     debug_print('straight')
     steer_pair.on_for_seconds(steering=0, speed=30, seconds=4)
     debug_print('straightening')
     steer_pair.on_for_seconds(steering=-90, speed=10, seconds=1)
     debug_print('half circle')
-    steer_pair.on_for_seconds(steering=-25, speed=30, seconds=5)
+    steer_pair.on_for_seconds(steering=-25, speed=30, seconds=4)
     debug_print('returning to start')
     steer_pair.on_for_seconds(steering=0, speed=30, seconds=4)
     # steer_pair.on_for_seconds(steering=50, speed=30, seconds=1)
@@ -58,6 +58,7 @@ def rectangle():
         steer_pair.on_for_seconds(steering=0, speed=30, seconds=3)
         turn_90_degrees()
 
-# lemniscate()
 # rectangle()
-# steer_pair.on_for_seconds(steering=100, speed=50, seconds=10, block=True)
+lemniscate()
+# steer_pair.on_for_seconds(steering=90, speed=50, seconds=10, block=True)
+
