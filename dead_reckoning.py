@@ -3,6 +3,7 @@ from sqlite3 import DateFromTicks
 from ev3dev2.motor import LargeMotor, MoveTank, OUTPUT_A, OUTPUT_D
 from ev3dev2.sensor.lego import GyroSensor
 from time import sleep, time
+import time
 import sys
 import math
 
@@ -12,7 +13,7 @@ motor = steer_pair.left_motor
 
 
 command = [
-  	[ 30, 30, 8],
+  	[ 50, 30, 2],
   	# [ 60, 40, 1],
   	# [-50, 80, 2]
 ]
@@ -85,25 +86,32 @@ def dead_reckoning(matrix):
 def dead_reckoning1(matrix):
     x = y = 0
     distance_travelled = 0
+    print('Starting position:',steer_pair.left_motor.position, file=sys.stderr)
     for row in matrix:
         left, right, command_duration = row
         steer_pair.on_for_seconds(left, right, seconds=command_duration, block=False, brake = True)
-        timestep = 0.1
+        timestep = 0.05
         elapsed_time = 0
         while elapsed_time < command_duration:
+            left_pos = steer_pair.left_motor.position
+            right_pos = steer_pair.right_motor.position
             sleep(timestep / 2)
             theta = gyro.angle
-            v_left, v_right = wheel_speeds()
+            sleep(timestep/2)
+            end_left = steer_pair.left_motor.position
+            # print('Left motor delta tacho: {}-{}'.format(end_left, left_pos), file=sys.stderr)
+            v_left = (  end_left - left_pos ) / 360 * wheel_circumference / timestep
+            v_right =(  steer_pair.right_motor.position - right_pos ) / 360 * wheel_circumference / timestep
             v_avg = (v_left + v_right) / 2
             x += math.cos(theta / 180 * math.pi) * v_avg * timestep
             y += math.sin(theta / 180 * math.pi) * v_avg * timestep
             distance_travelled += v_avg * timestep
             elapsed_time += timestep
             d = steer_pair.left_motor.position / 360 * wheel_circumference
-            print('time = {:.1f} pos = ({:.3f},{:.3f}) angle={} - v_left: {:.3f} ({:.3f}) v_right: {:.3f} ({:.3f}) v_avg: {:.3f}'.format(elapsed_time, x, y, theta, v_left, steer_pair.left_motor.speed, v_right,steer_pair.right_motor.speed, v_avg), file=sys.stderr)
-            print('distance travelled {:.3f} or {:.3f}'.format(d, distance_travelled), file=sys.stderr)
-            print('--------------------------------', file=sys.stderr)
-            sleep(timestep/2)
+            # print('time = {:.1f} pos = ({:.3f},{:.3f}) angle={} - v_left: {:.3f} ({:.3f}) v_right: {:.3f} ({:.3f}) v_avg: {:.3f}'.format(elapsed_time, x, y, theta, v_left, steer_pair.left_motor.speed, v_right,steer_pair.right_motor.speed, v_avg), file=sys.stderr)
+            # print('distance travelled {:.3f} ({} tachos) or {:.3f}'.format(d, steer_pair.left_motor.position, distance_travelled), file=sys.stderr)
+            # print('--------------------------------', file=sys.stderr)
+    print('time = {:.1f} pos = ({:.3f},{:.3f}) angle={}'.format(elapsed_time, x, y, theta), file=sys.stderr)
     print('Final distance travelled {:.3f} or {:.3f}'.format(d, distance_travelled), file=sys.stderr)
 
 gyro.reset()
