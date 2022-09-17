@@ -17,7 +17,6 @@ command = [
   	# [-50, 80, 2]
 ]
 print('tachos per rotation: ', steer_pair.left_motor.count_per_rot, file=sys.stderr)
-print('Starting angle: ', gyro.angle, file=sys.stderr)
 
 
 def get_forward_velocity():
@@ -26,13 +25,13 @@ def get_forward_velocity():
 
 def wheel_speeds():
     wheel_diameter = 0.057
-    wheel_circumference = wheel_diameter * math.pi
+    wheel_circumference = 0.23
     v_left = steer_pair.left_motor.speed / 360 * wheel_circumference
     v_right = steer_pair.right_motor.speed / 360 * wheel_circumference
     return v_left, v_right
 
 def radius_of_curvature():
-    wheel_distance = 0.108
+    wheel_distance = 0.12
     v_left, v_right = wheel_speeds()
     if math.isclose(v_left, v_right, abs_tol=0.0001):
         return float('inf')
@@ -57,8 +56,11 @@ def straight():
     print('Ending Angle: {} ({})'.format(gyro.angle, gyro.angle % 360), file=sys.stderr)
 
 def dead_reckoning(matrix):
+    gyro.reset()
     x = y = 0
     theta = gyro.angle
+    wheel_distance = 0.115
+    print('Starting angle: ', theta, file=sys.stderr)
     for row in matrix:
         left, right, time = row
         steer_pair.on_for_seconds(left, right, seconds=time, block=False)
@@ -67,17 +69,19 @@ def dead_reckoning(matrix):
         v_left, v_right = wheel_speeds()
         print('Wheel speeds: {:.3f},{:.3f}'.format(v_left, v_right), file=sys.stderr)
         sleep(time/2)
-        delta = ((gyro.angle - theta) %360 )/ 180 * math.pi
-        print('Delta theta {}, R: {}'.format(delta, R), file=sys.stderr)
+        new_theta = gyro.angle
+        delta = ((new_theta - theta) %360 )
+        print('Angle: {} Delta theta {:3f}, R: {}'.format(new_theta, delta, R), file=sys.stderr)
         theta = gyro.angle
-        v_avg = v_left + v_right / 2
+        v_avg = (v_left + v_right) / 2
         if R != float('inf'):
-            x += math.cos(delta) * v_avg * time
-            y += math.sin(delta) * v_avg * time
+            x += math.cos(delta / 180 * math.pi ) * v_avg * time
+            y += math.sin(delta / 180 * math.pi) * v_avg * time
         else:
-            x += v_avg * time
-            y += v_avg * time
-        print('Current location {:.3f}, {:.3f}'.format(x, y), file=sys.stderr)
-        print('Ending Angle {:.3f}'.format(gyro.angle), file=sys.stderr)
+            x += v_avg * time * math.cos(theta / 180 * math.pi)
+            y += v_avg * time * math.sin(theta / 180 * math.pi)
+        print('v_left: {:.3f} v_right: {:.3f} v_avg: {:.3f}'.format(v_left, v_right, v_avg), file=sys.stderr)
+        print('Current location {:.3f}, {:.3f} at {} degrees'.format(x, y, theta), file=sys.stderr)
 
 dead_reckoning(command)
+# gyro.calibrate()
