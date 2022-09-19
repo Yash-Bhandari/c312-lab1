@@ -20,14 +20,12 @@ ln3, = plt.plot([], [], 'o')
 # == Constants ==
 d = 0.0575 # distance between wheels over 2 -- meters
 wheel_circumference = 0.221 # -- meters
-VelDrive = 1 # constant speed
 frac = 1/2
-DriveTime = 2*np.pi * 1/frac # seconds
+DriveTime = 2*np.pi * 1/frac # -- seconds
 NoneTime = np.pi/2
 totTime = NoneTime*2+DriveTime
 Steps = int(math.ceil(30 * totTime/np.pi)) # 30 steps per pi sec
-print(Steps)
-timeStep = totTime/Steps
+timeStep = totTime/Steps # time per step
 v_l, v_r = [], []
 
 # ===========================================
@@ -37,36 +35,36 @@ x, y = lemniscate(t, 1/2, frac) # time, scale, frac
 # x,y = circle(t, 1/16, 1.5)
 
 # ===========================================
-# == derivatives ==
+# == derivatives of curve ==
 dir_x_1, dir_x_2, dir_y_1, dir_y_2 = derivatives(x,y,t)
 
 # ===========================================
-# == Radius of curvature == (meters)
+# == Radius of curvature == (meters) ==
 R = ((dir_x_1**2 + dir_y_1**2)**(3/2)/
         (dir_x_1*dir_y_2 - dir_x_2*dir_y_1))
 
 # ===========================================
-# == arc length parameterization == (meters) ==
+# == arc length & speed of curve == (meters) ==
 V = np.sqrt(dir_x_1**2 + dir_y_1**2)  # m/s
 arcLenght = np.trapz(V, x=t)
 print(arcLenght)
 
-"""s = np.array([0])
-for i in range(1,len(t0)):
-    arcLenght = np.trapz(V_old[0:i], x=t0[0:i])
-    s = np.append(s,arcLenght)
-print(s)
-frac = 1
-x, y = lemniscate(s, 1, totTime/s[-1])"""
+# s = np.array([0])
+# for i in range(1,len(t0)):
+#     arcLenght = np.trapz(V_old[0:i], x=t0[0:i])
+#     s = np.append(s,arcLenght)
+# print(s)
+# frac = 1
+# x, y = lemniscate(s, 1, totTime/s[-1])"""
 
-"""# ===========================================
-# == derivatives ==
-dir_x_1, dir_x_2, dir_y_1, dir_y_2 = derivatives(x,y,s)
+# """# ===========================================
+# # == derivatives ==
+# dir_x_1, dir_x_2, dir_y_1, dir_y_2 = derivatives(x,y,s)
 
-# ===========================================
-# == New Velocities ==
-V = np.sqrt(dir_x_1**2 + dir_y_1**2) # m/s
-print(V)"""
+# # ===========================================
+# # == New Velocities ==
+# V = np.sqrt(dir_x_1**2 + dir_y_1**2) # m/s
+# print(V)
 
 
 def init():
@@ -89,8 +87,8 @@ def update(i):
     circle_x = circle_center_x + abs(R[i])*np.cos(t)
     circle_y = circle_center_y + abs(R[i])*np.sin(t)
 
-    ln2.set_data(circle_x, circle_y)
-    ln3.set_data(x[i], y[i])
+    ln2.set_data(circle_x, circle_y) # draw circle
+    ln3.set_data(x[i], y[i]) # draw curve
 
     return ln, ln2, ln3
 
@@ -105,8 +103,8 @@ def update2(i):
     v_left = V[i] - (V[i]*d)/R[i]
     v_right = 2*V[i] - v_left
 
-    v_left = FakeRealSpeed(v_left)
-    v_right = FakeRealSpeed(v_right)
+    v_left = FakeSpeedToRealSpeed(v_left)
+    v_right = FakeSpeedToRealSpeed(v_right)
 
 
     print('V {:.3f}, V_l {:.3f}, V_r {:.3f}, R {:.3f}, V{:.3f}'.format(
@@ -121,13 +119,15 @@ def update2(i):
 
     return barcollection
 
-def RealWheelSpeed(v):
+def RealWheelSpeed(v): # probably wrong
     return (v*10*np.pi*wheel_circumference)/180
 
-def FakeRealSpeed(v):
-    #return v*180/(10*np.pi*wheel_circumference)
+def FakeSpeedToRealSpeed(v):
     return ((v/wheel_circumference)*360)/10
 
+
+# ===========================================
+# == Plot graphs ==
 anim2 = FuncAnimation(fig2, update2, frames=Steps,
                       init_func=init2, repeat=False)
 
@@ -136,6 +136,8 @@ ani1 = FuncAnimation(fig1, update, frames=Steps,
 
 plt.show()
 
+# ===========================================
+# == Save graph data ==
 with open('curve.txt', 'w') as f:
     for i in range(len(t)):
         f.write(str(v_l[i]) + ' ' + str(v_r[i]) + ' ' + str(timeStep))
@@ -143,19 +145,19 @@ with open('curve.txt', 'w') as f:
 f.close()
 
 
-"""def wheelSpeed(v_l, v_r):
-    if abs(v_l) > maxSpeed:
-        s = np.sign(v_r)
-        factor = v_l/maxSpeed
+# def wheelSpeed(v_l, v_r):
+#     if abs(v_l) > maxSpeed:
+#         s = np.sign(v_r)
+#         factor = v_l/maxSpeed
 
-        v_l /= factor
-        v_r /= s*factor
+#         v_l /= factor
+#         v_r /= s*factor
 
-    if abs(v_r) > maxSpeed:
-        s = np.sign(v_l)
-        factor = v_r/maxSpeed
+#     if abs(v_r) > maxSpeed:
+#         s = np.sign(v_l)
+#         factor = v_r/maxSpeed
 
-        v_r /= s*factor
-        v_r /= factor
+#         v_r /= s*factor
+#         v_r /= factor
 
-    return v_l, v_r"""
+#     return v_l, v_r
