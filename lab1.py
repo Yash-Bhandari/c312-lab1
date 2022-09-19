@@ -35,7 +35,7 @@ def lemniscate():
     debug_print('half circle')
     steer_pair.on_for_seconds(steering=25, speed=30, seconds=4)
     debug_print('straight')
-    steer_pair.on_for_seconds(steering=0, speed=30, seconds=4)
+    steer_pair.on_for_seconds(steering=0, speed=30, seconds=2)
     debug_print('straightening')
     steer_pair.on_for_seconds(steering=-90, speed=10, seconds=1)
     debug_print('half circle')
@@ -50,15 +50,16 @@ def lemniscate():
     #     sleep(0.5)
 
 def turn_90_degrees():
-    steer_pair.on_for_seconds(steering=90, speed=10, seconds=1.9)
+    steer_pair.on_for_seconds(steering=84, speed=10, seconds=1.6)
+    # tank.on_for_seconds(36, -36, 0.25)
 
 def rectangle():
     for step in range(4):
         debug_print('step {}'.format(step))
-        steer_pair.on_for_seconds(steering=0, speed=30, seconds=3)
+        steer_pair.on_for_seconds(steering=0, speed=30, seconds=1.5)
         turn_90_degrees()
 
-# rectangle()
-lemniscate()
+rectangle()
+# lemniscate()
 # steer_pair.on_for_seconds(steering=90, speed=50, seconds=10, block=True)
-
+# turn_90_degrees()
