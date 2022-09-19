@@ -10,10 +10,10 @@ def main():
     Lines = file1.readlines()
     print(len(Lines[15:-15]), file=sys.stderr)
 
-    for line in Lines[15:-15]:
+    for line in Lines[15:-15]: # skip 30 non-clean timesteps
         t1 = time()
         v_l, v_r, TimeStep = map(float, line.split(' '))
-        tank_drive.on_for_seconds(v_l, v_r, seconds=TimeStep, block=False, brake = True)
+        tank_drive.on_for_seconds(v_l, v_r, seconds=TimeStep, block=False, brake=True)
         #print('v_left: {:.3f} v_right: {:.3f}'.format(v_l, v_r), file=sys.stderr)
         t2 = time()
         sleep(TimeStep - (t2-t1))

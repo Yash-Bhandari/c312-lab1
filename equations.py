@@ -21,15 +21,18 @@ def circle(t, a, frac):
 
 
 def line(t, a, frac):
-    x = frac*t
-    y = a
+    x = t
+    y = frac*t
+    return x, y
 
 
-def lissajous(t, a, frac):
-    x = a*np.cos(frac*t)
-    y = a*np.sin(frac*t)
+def lissajous(t, a, b, fracx, fracy):
+    x = a*np.cos(fracx*t)
+    y = b*np.sin(fracy*t)
+    return x, y
 
 
 def cardioid(t, a, frac):
     x = a*np.cos(frac*t)*(1-np.cos(frac*t))
     y = a*np.sin(frac*t)*(1-np.cos(frac*t))
+    return x, y

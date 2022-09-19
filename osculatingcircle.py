@@ -1,11 +1,16 @@
+from distutils.log import debug
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from equations import *
 import math
 
-# ===========================================
+#===========================================
+# == TO DO ==
+# 1) Double check d, wheel_circumference values
+# 2)
 
+# ===========================================
 # == Wheel Speed plt ==
 fig2, ax2 = plt.subplots()
 barcollection = plt.bar(['v_l', 'v_r', 'R'],[0, 0, 0])
@@ -18,7 +23,7 @@ ln3, = plt.plot([], [], 'o')
 
 # ===========================================
 # == Constants ==
-d = 0.0575 # distance between wheels over 2 -- meters
+d = 0.058 # distance between wheels over 2 -- meters
 wheel_circumference = 0.221 # -- meters
 frac = 1/2
 DriveTime = 2*np.pi * 1/frac # -- seconds
@@ -31,8 +36,10 @@ v_l, v_r = [], []
 # ===========================================
 # == inital curve ==
 t = np.linspace(-NoneTime+np.pi, DriveTime+NoneTime+np.pi, Steps)
-x, y = lemniscate(t, 1/2, frac) # time, scale, frac
-# x,y = circle(t, 1/16, 1.5)
+x, y = lemniscate(t, 1/2.5, frac) # time, scale, frac
+#x, y = circle(t, 1/4, frac)
+# x, y = line(t, 1, 1/10)
+# x, y = lissajous(t, 1/8, 1, 2, 3)
 
 # ===========================================
 # == derivatives of curve ==
@@ -107,20 +114,22 @@ def update2(i):
     v_right = FakeSpeedToRealSpeed(v_right)
 
 
-    print('V {:.3f}, V_l {:.3f}, V_r {:.3f}, R {:.3f}, V{:.3f}'.format(
-           V[i], v_left, v_right, R[i], (v_left+v_right)/2))
+    # print('V {:.3f}, V_l {:.3f}, V_r {:.3f}, R {:.3f}, V{:.3f}'.format(
+    #        V[i], v_left, v_right, R[i], (v_left+v_right)/2))
 
     barcollection[0].set_height(v_left)
     barcollection[1].set_height(v_right)
     barcollection[2].set_height(R[i])
 
-    v_l.append(v_left)
-    v_r.append(v_right)
+    v_l.append(round(v_left, 3))
+    v_r.append(round(v_right, 3))
+
+    print(round(R[i], 3), round(d*(v_left+v_right)/(v_right-v_left), 3))
 
     return barcollection
 
-def RealWheelSpeed(v): # probably wrong
-    return (v*10*np.pi*wheel_circumference)/180
+def RealWheelSpeed(v):
+    return (v*10/360)*wheel_circumference
 
 def FakeSpeedToRealSpeed(v):
     return ((v/wheel_circumference)*360)/10
