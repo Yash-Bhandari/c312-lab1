@@ -9,6 +9,8 @@ VelDrive = 30 # Constant speed
 maxSpeed = 50 # maximum speed
 TotSteps = 50 # Number of time steps
 Time = 4*np.pi
+v_l, v_r = [], []
+
 
 # == Eq's ==
 t = np.linspace(0, Time, TotSteps) # time
@@ -78,7 +80,8 @@ def drive():
     StepTime = Time/TotSteps
 
     lines = []
-    with open('Lemniscate.txt', 'w') as f:
+
+    with open('c312-lab1/Lemniscate.txt', 'w') as f:
         for i in range(len(t)):
             f.write(str(v_l[i]) + ' ' + str(v_r[i]) + ' ' + str(StepTime))
             f.write('\n')
@@ -92,6 +95,5 @@ def drive():
     for i in range(TotSteps):
         pass
         #tank_drive.on_for_seconds(v_l[i], v_r[i], StepTime)
-
 
 drive()
