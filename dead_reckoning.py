@@ -13,9 +13,9 @@ motor = steer_pair.left_motor
 
 
 command = [
-  	[ 50, 30, 2],
-  	# [ 60, 40, 1],
-  	# [-50, 80, 2]
+  	[ 80, 60, 2],
+  	[ 60, 40, 1],
+  	[-50, 80, 2]
 ]
 print('tachos per rotation: ', steer_pair.left_motor.count_per_rot, file=sys.stderr)
 
@@ -56,9 +56,8 @@ def straight():
     print('Ending Angle: {} ({})'.format(gyro.angle, gyro.angle % 360), file=sys.stderr)
 
 def dead_reckoning(matrix):
-    gyro.reset()
     x = y = 0
-    theta = gyro.angle
+    theta = 0
     wheel_distance = 0.115
     print('Starting angle: ', theta, file=sys.stderr)
     for row in matrix:
@@ -67,21 +66,22 @@ def dead_reckoning(matrix):
         sleep(time/2)
         R = radius_of_curvature()
         v_left, v_right = wheel_speeds()
+        omega = (v_right - v_left )/ wheel_distance
+        delta_theta = omega * time
+        theta += delta_theta
         print('Wheel speeds: {:.3f},{:.3f}'.format(v_left, v_right), file=sys.stderr)
         sleep(time/2)
-        new_theta = gyro.angle
-        delta = ((new_theta - theta) %360 )
-        print('Angle: {} Delta theta {:3f}, R: {}'.format(new_theta, delta, R), file=sys.stderr)
-        theta = gyro.angle
+        # print('Angle: {} Delta theta {:3f}, R: {}'.format(new_theta, delta, R), file=sys.stderr)
+        # theta = gyro.angle
         v_avg = (v_left + v_right) / 2
         if R != float('inf'):
-            x += math.cos(delta / 180 * math.pi ) * v_avg * time
-            y += math.sin(delta / 180 * math.pi) * v_avg * time
+            x += math.cos(theta) * v_avg * time
+            y += math.sin(theta) * v_avg * time
         else:
-            x += v_avg * time * math.cos(theta / 180 * math.pi)
-            y += v_avg * time * math.sin(theta / 180 * math.pi)
+            x += v_avg * time * math.cos(theta )
+            y += v_avg * time * math.sin(theta )
         print('v_left: {:.3f} v_right: {:.3f} v_avg: {:.3f}'.format(v_left, v_right, v_avg), file=sys.stderr)
-        print('Current location {:.3f}, {:.3f} at {} degrees'.format(x, y, theta), file=sys.stderr)
+        print('Current location {:.3f}, {:.3f} at {} radians'.format(x, y, theta), file=sys.stderr)
 
 def dead_reckoning1(matrix):
     x = y = 0
@@ -115,5 +115,5 @@ def dead_reckoning1(matrix):
     print('Final distance travelled {:.3f} or {:.3f}'.format(d, distance_travelled), file=sys.stderr)
 
 gyro.reset()
-dead_reckoning1(command)
+dead_reckoning(command)
 # gyro.calibrate()
