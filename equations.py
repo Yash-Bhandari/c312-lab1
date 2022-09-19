@@ -8,32 +8,28 @@ def derivatives(x, y, t):
     dir_y_2 = np.gradient(dir_y_1,t)
     return dir_x_1, dir_x_2, dir_y_1, dir_y_2
 
-def lemniscate(t, a, fac):
-    x = a*np.cos(fac*t) * 1/(1+np.sin(fac*t)**2)
-    y = a*np.sin(fac*t)*np.cos(fac*t) * 1/(1+np.sin(fac*t)**2)
+def lemniscate(t, a, frac):
+    x = a*np.cos(frac*t) * 1/(1+np.sin(frac*t)**2)
+    y = a*np.sin(frac*t)*np.cos(frac*t) * 1/(1+np.sin(frac*t)**2)
     return x, y
 
 
-def circle(t, a, fac):
-     # -- Circle --
-    x = a*np.cos(fac * t)
-    y = a*np.sin(fac * t)
+def circle(t, a, frac):
+    x = a*np.cos(frac * t)
+    y = a*np.sin(frac * t)
     return x, y
 
 
-def other():
-    # -- line --
-    """x = t
-    y = 0*t"""
+def line(t, a, frac):
+    x = frac*t
+    y = a
 
-    # -- Lissajous curve --
-    """x = 4*np.cos(1.5*t)
-    y = 4*np.sin(t)"""
 
-    # -- Test 1 --
-    """x = 2*np.cos(t)+1
-    y = 5*np.sin(2*t)"""
+def lissajous(t, a, frac):
+    x = a*np.cos(frac*t)
+    y = a*np.sin(frac*t)
 
-    # -- cardioid --
-    """x = 2*np.cos(t)*(1-np.cos(t))
-    y = 2*np.sin(t)*(1-np.cos(t))"""
+
+def cardioid(t, a, frac):
+    x = a*np.cos(frac*t)*(1-np.cos(frac*t))
+    y = a*np.sin(frac*t)*(1-np.cos(frac*t))
