@@ -8,7 +8,7 @@ tank_drive = MoveTank(OUTPUT_A, OUTPUT_D)
 def main():
     file1 = open('curve.txt', 'r')
     Lines = file1.readlines()
-    print(len(Lines[15:-15]), file=sys.stderr)
+    print(len(Lines[25:-25]), file=sys.stderr)
 
     for line in Lines[15:-15]: # skip 30 non-clean timesteps
         t1 = time()

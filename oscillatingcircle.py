@@ -29,14 +29,14 @@ frac = 1/2
 DriveTime = 2*np.pi * 1/frac # -- seconds
 NoneTime = np.pi/2
 totTime = NoneTime*2+DriveTime
-Steps = int(math.ceil(30 * totTime/np.pi)) # 30 steps per pi sec
+Steps = int(math.ceil(50 * totTime/np.pi)) # 30 steps per pi sec
 timeStep = totTime/Steps # time per step
 v_l, v_r = [], []
 
 # ===========================================
 # == inital curve ==
 t = np.linspace(-NoneTime+np.pi, DriveTime+NoneTime+np.pi, Steps)
-x, y = lemniscate(t, 1/2.5, frac) # time, scale, frac
+x, y = lemniscate(t, 1/4, frac) # time, scale, frac
 #x, y = circle(t, 1/4, frac)
 # x, y = line(t, 1, 1/10)
 # x, y = lissajous(t, 1/8, 1, 2, 3)
@@ -49,6 +49,7 @@ dir_x_1, dir_x_2, dir_y_1, dir_y_2 = derivatives(x,y,t)
 # == Radius of curvature == (meters) ==
 R = ((dir_x_1**2 + dir_y_1**2)**(3/2)/
         (dir_x_1*dir_y_2 - dir_x_2*dir_y_1))
+weighting = np.ones_like(R)
 
 # ===========================================
 # == arc length & speed of curve == (meters) ==
