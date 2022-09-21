@@ -13,9 +13,9 @@ motor = steer_pair.left_motor
 
 
 command = [
-  	[ 80, 60, 2],
-  	[ 60, 40, 1],
-  	[-50, 80, 2]
+  	[ 20, 30, 2],
+  	[ 40, 20, 4],
+  	# [-50, 80, 2]
 ]
 print('tachos per rotation: ', steer_pair.left_motor.count_per_rot, file=sys.stderr)
 
@@ -81,7 +81,8 @@ def dead_reckoning(matrix):
             x += v_avg * time * math.cos(theta )
             y += v_avg * time * math.sin(theta )
         print('v_left: {:.3f} v_right: {:.3f} v_avg: {:.3f}'.format(v_left, v_right, v_avg), file=sys.stderr)
-        print('Current location {:.3f}, {:.3f} at {} radians'.format(x, y, theta), file=sys.stderr)
+        print('Current location {:.3f}, {:.3f} at {} degrees'.format(x, y, (theta / math.pi *  180)%360), file=sys.stderr)
+        print('Angle from gyroscope = {:.3f}'.format(gyro.angle % 360), file=sys.stderr)
 
 def dead_reckoning1(matrix):
     x = y = 0

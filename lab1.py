@@ -33,15 +33,32 @@ rated maximum speed of 1050 deg/s.
 
 def lemniscate():
     debug_print('half circle')
-    steer_pair.on_for_seconds(steering=25, speed=30, seconds=4)
-    debug_print('straight')
-    steer_pair.on_for_seconds(steering=0, speed=30, seconds=2)
-    debug_print('straightening')
-    steer_pair.on_for_seconds(steering=-90, speed=10, seconds=1)
-    debug_print('half circle')
-    steer_pair.on_for_seconds(steering=-25, speed=30, seconds=4)
-    debug_print('returning to start')
-    steer_pair.on_for_seconds(steering=0, speed=30, seconds=4)
+    for i in range(10):
+        steer_pair.on_for_seconds(steering=i/10 * 35, speed=30, seconds=0.2, brake=False)
+    steer_pair.on_for_seconds(35, speed=30, seconds=2.3, brake=False)
+    for i in range(1, 11):
+        steer_pair.on_for_seconds(steering=35 - 35*i/10, speed=30 - 5*i/10, seconds=0.2, brake=False)
+
+
+    for i in range(10):
+        steer_pair.on_for_seconds(steering=-( i/10 * 45 ), speed=30, seconds=0.2, brake=False)
+    steer_pair.on_for_seconds(-38, speed=30, seconds=2.3, brake=False)
+    for i in range(1, 11):
+        steer_pair.on_for_seconds(steering=-(35 - 35*i/10), speed=30 - 15*i/10, seconds=0.2, brake=False)
+    # for i in range(10):
+    #     steer_pair.on_for_seconds(steering=-(i/10 * 35), speed=30, seconds=0.2, brake=False)
+    # steer_pair.on_for_seconds(-35, speed=30, seconds=2.4, brake=False)
+    # for i in range(1, 11):
+    #     steer_pair.on_for_seconds(steering=-(35 - 35*i/10), speed=30, seconds=0.2, brake=False)
+    # steer_pair.on_for_seconds(steering=0, speed=30, seconds=1, brake=False)
+    # debug_print('straight')
+    # steer_pair.on_for_seconds(steering=0, speed=30, seconds=2)
+    # debug_print('straightening')
+    # steer_pair.on_for_seconds(steering=-90, speed=10, seconds=1)
+    # debug_print('half circle')
+    # steer_pair.on_for_seconds(steering=-25, speed=30, seconds=4)
+    # debug_print('returning to start')
+    # steer_pair.on_for_seconds(steering=0, speed=30, seconds=4)
     # steer_pair.on_for_seconds(steering=50, speed=30, seconds=1)
     # max_steer = 20
     # num_steps = 10
@@ -57,9 +74,11 @@ def rectangle():
     for step in range(4):
         debug_print('step {}'.format(step))
         steer_pair.on_for_seconds(steering=0, speed=30, seconds=1.5)
-        turn_90_degrees()
+        steer_pair.on_for_seconds(steering=84, speed=10, seconds=1.6)
 
-rectangle()
-# lemniscate()
+# rectangle()
+lemniscate()
 # steer_pair.on_for_seconds(steering=90, speed=50, seconds=10, block=True)
 # turn_90_degrees()
+
+# steer_pair.on_for_seconds(steering=0, speed=30, seconds=6, block=True)
