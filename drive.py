@@ -5,7 +5,7 @@ import sys
 
 tank_drive = MoveTank(OUTPUT_A, OUTPUT_D)
 
-def main():
+def draw_curve():
     file1 = open('curve.txt', 'r')
     Lines = file1.readlines()
     print(len(Lines[25:-25]), file=sys.stderr)
@@ -20,4 +20,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    draw_curve()
